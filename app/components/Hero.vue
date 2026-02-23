@@ -26,7 +26,8 @@ const { data: settings } = await useFetch<Record<string, string>>('/api/settings
           :enter="{ opacity: 1, y: 0 }"
           :transition="{ duration: 500, delay: 100 }"
         >
-          A Devt Digital desenvolve plataformas SaaS e soluções web para otimizar processos empresariais e automatizar operações digitais.
+          <template v-if="settings?.home_description">{{ settings.home_description }}</template>
+          <template v-else>A Devt Digital desenvolve plataformas SaaS e soluções web para otimizar processos empresariais e automatizar operações digitais.</template>
         </p>
         <div 
           class="mt-12 flex flex-col sm:flex-row gap-4"

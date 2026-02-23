@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { Layers } from 'lucide-vue-next'
 
 const currentYear = ref(new Date().getFullYear())
+const { data: settings } = await useFetch<Record<string, string>>('/api/settings')
 </script>
 
 <template>
@@ -23,7 +24,9 @@ const currentYear = ref(new Date().getFullYear())
       </div>
       
       <div class="mt-12 pt-8 border-t border-slate-900 text-center md:text-left text-sm flex flex-col md:flex-row justify-between items-center gap-4">
-        <p>&copy; {{ currentYear }} Devt Digital. Todos os direitos reservados.</p>
+        <p v-if="settings?.footer_text">{{ settings.footer_text }}</p>
+        <p v-else>&copy; {{ currentYear }} Devt Digital. Todos os direitos reservados.</p>
+        
         <p class="text-slate-500">Tecnologia para automação e crescimento digital.</p>
       </div>
     </div>
