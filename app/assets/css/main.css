@@ -1,10 +1,16 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
 
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
     /* Ajuste para o header fixo */
 }
+
+body {
+    font-family: 'Figtree', sans-serif;
+}
+
 
 /* Page transitions */
 .page-enter-active,
