@@ -26,10 +26,11 @@ export default defineEventHandler(async (event) => {
 
     // Set HTTP Only Cookie
     setCookie(event, 'auth_token', token, {
-        httpOnly: true,
+        httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 7 // 7 days
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: '/' // ensure cookie is sent for all routes
     })
 
     return {
