@@ -77,37 +77,39 @@ const closeMenu = () => {
     </div>
 
     <!-- Mobile Nav -->
-    <div v-show="isOpen" class="md:hidden bg-white border-b border-slate-200 shadow-lg absolute w-full">
-      <div class="px-4 pt-2 pb-6 space-y-2">
-        <template v-if="isHome">
+    <Transition name="menu">
+      <div v-show="isOpen" class="md:hidden bg-white border-b border-slate-200 shadow-lg absolute w-full">
+        <div class="px-4 pt-2 pb-6 space-y-2">
+          <template v-if="isHome">
+            <a
+              v-for="link in navLinks"
+              :key="link.name"
+              :href="link.href"
+              class="block px-4 py-3 text-base font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl transition-colors"
+              @click="closeMenu"
+            >
+              {{ link.name }}
+            </a>
+          </template>
+          <template v-else>
+            <NuxtLink
+              to="/"
+              class="block px-4 py-3 text-base font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl transition-colors"
+              @click="closeMenu"
+            >
+              Voltar ao Início
+            </NuxtLink>
+          </template>
           <a
-            v-for="link in navLinks"
-            :key="link.name"
-            :href="link.href"
-            class="block px-4 py-3 text-base font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl transition-colors"
+            :href="isHome ? '#contato' : '/#contato'"
+            class="block px-4 py-3 text-base font-semibold text-slate-900 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors mt-4"
             @click="closeMenu"
           >
-            {{ link.name }}
+            Falar conosco
           </a>
-        </template>
-        <template v-else>
-          <NuxtLink
-            to="/"
-            class="block px-4 py-3 text-base font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl transition-colors"
-            @click="closeMenu"
-          >
-            Voltar ao Início
-          </NuxtLink>
-        </template>
-        <a
-          :href="isHome ? '#contato' : '/#contato'"
-          class="block px-4 py-3 text-base font-semibold text-slate-900 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors mt-4"
-          @click="closeMenu"
-        >
-          Falar conosco
-        </a>
+        </div>
       </div>
-    </div>
+    </Transition>
   </header>
 </template>
 

@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    /* Ajuste para o header fixo */
+}
+
+/* Page transitions */
+.page-enter-active,
+.page-leave-active {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-enter-from,
+.page-leave-to {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateY(5px);
+}
+
+/* Menu transitions */
+.menu-enter-active,
+.menu-leave-active {
+    transition: all 0.3s ease-out;
+}
+
+.menu-enter-from,
+.menu-leave-to {
+    opacity: 0;
+    transform: translateY(-10px);
+}
