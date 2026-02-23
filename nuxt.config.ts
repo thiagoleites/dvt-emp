@@ -3,6 +3,9 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+  devServer: {
+    port: 3001
+  },
   css: ['~/assets/css/main.css'],
   modules: [
     '@vueuse/nuxt',
