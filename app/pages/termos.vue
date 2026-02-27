@@ -1,4 +1,10 @@
 <script setup lang="ts">
+useHead({
+  title: 'Termos de Uso - Devt Digital',
+  meta: [
+    { name: 'description', content: 'Termos de Uso da Devt Digital' }
+  ]
+})
 import { computed } from 'vue'
 
 const currentYear = computed(() => new Date().getFullYear())

@@ -1,4 +1,11 @@
 <script setup lang="ts">
+useHead({
+  title: 'Política de Privacidade - Devt Digital',
+  meta: [
+    { name: 'description', content: 'Política de Privacidade da Devt Digital' }
+  ]
+})
+
 import { computed } from 'vue'
 
 const currentYear = computed(() => new Date().getFullYear())
