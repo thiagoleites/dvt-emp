@@ -1,5 +1,48 @@
 <script setup lang="ts">
-import { Mail, Phone, MapPin, ArrowRight } from 'lucide-vue-next'
+import { ref } from 'vue'
+import { Mail, Phone, MapPin, ArrowRight, Loader2, CheckCircle, AlertCircle } from 'lucide-vue-next'
+
+const form = ref({
+  name: '',
+  email: '',
+  message: ''
+})
+
+const isLoading = ref(false)
+const status = ref<'idle' | 'success' | 'error'>('idle')
+const errorMessage = ref('')
+
+async function submitForm() {
+  if (!form.value.name || !form.value.email || !form.value.message) {
+    status.value = 'error'
+    errorMessage.value = 'Por favor, preencha todos os campos.'
+    return
+  }
+
+  isLoading.value = true
+  status.value = 'idle'
+  
+  try {
+    await $fetch('/api/contact', {
+      method: 'POST',
+      body: form.value
+    })
+    
+    status.value = 'success'
+    form.value = { name: '', email: '', message: '' }
+    
+    // Reset success message after 5 seconds
+    setTimeout(() => {
+      if (status.value === 'success') status.value = 'idle'
+    }, 5000)
+    
+  } catch (error: any) {
+    status.value = 'error'
+    errorMessage.value = error.data?.statusMessage || 'Ocorreu um erro ao enviar sua mensagem. Tente novamente mais tarde.'
+  } finally {
+    isLoading.value = false
+  }
+}
 </script>
 
 <template>
@@ -43,45 +86,67 @@ import { Mail, Phone, MapPin, ArrowRight } from 'lucide-vue-next'
           </div>
         </div>
 
-        <div class="bg-white rounded-3xl p-8 sm:p-10 text-slate-900 shadow-xl">
+        <div class="bg-white rounded-3xl p-8 sm:p-10 text-slate-900 shadow-xl relative overflow-hidden">
           <h3 class="text-2xl font-bold mb-8">Envie uma mensagem</h3>
-          <form class="space-y-5" @submit.prevent>
+          
+          <form class="space-y-5" @submit.prevent="submitForm">
             <div>
               <label for="name" class="block text-sm font-semibold text-slate-700 mb-2">Nome completo</label>
               <input 
+                v-model="form.name"
                 type="text" 
                 id="name"
                 class="w-full px-5 py-3.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-transparent outline-none transition-all bg-slate-50 focus:bg-white"
                 placeholder="Seu nome"
                 required
+                :disabled="isLoading"
               />
             </div>
             <div>
               <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">Email corporativo</label>
               <input 
+                v-model="form.email"
                 type="email" 
                 id="email"
-                class="w-full px-5 py-3.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-transparent outline-none transition-all bg-slate-50 focus:bg-white"
+                class="w-full px-5 py-3.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-transparent outline-none transition-all bg-slate-50 focus:bg-white text-slate-900"
                 placeholder="seu@email.com"
                 required
+                :disabled="isLoading"
               />
             </div>
             <div>
               <label for="message" class="block text-sm font-semibold text-slate-700 mb-2">Mensagem</label>
               <textarea 
+                v-model="form.message"
                 id="message"
                 rows="4"
-                class="w-full px-5 py-3.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-transparent outline-none transition-all resize-none bg-slate-50 focus:bg-white"
+                class="w-full px-5 py-3.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-transparent outline-none transition-all resize-none bg-slate-50 focus:bg-white text-slate-900"
                 placeholder="Como podemos ajudar?"
                 required
+                :disabled="isLoading"
               ></textarea>
             </div>
+            
+            <!-- Status Messages -->
+            <div v-if="status === 'success'" class="flex items-center gap-3 p-4 text-sm text-emerald-800 rounded-xl bg-emerald-50">
+              <CheckCircle class="w-5 h-5 text-emerald-500 shrink-0" />
+              Mensagem enviada com sucesso! Entraremos em contato em breve.
+            </div>
+            
+            <div v-if="status === 'error'" class="flex items-center gap-3 p-4 text-sm text-red-800 rounded-xl bg-red-50">
+              <AlertCircle class="w-5 h-5 text-red-500 shrink-0" />
+              {{ errorMessage }}
+            </div>
+
             <button 
               type="submit"
-              class="w-full py-4 mt-2 bg-slate-900 text-white font-semibold rounded-xl hover:bg-slate-800 transition-colors flex justify-center items-center gap-2"
+              :disabled="isLoading"
+              class="w-full py-4 mt-2 bg-slate-900 text-white font-semibold rounded-xl hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors flex justify-center items-center gap-2"
             >
-              Enviar mensagem
-              <ArrowRight class="w-5 h-5" />
+              <span v-if="!isLoading">Enviar mensagem</span>
+              <span v-else>Enviando...</span>
+              <Loader2 v-if="isLoading" class="w-5 h-5 animate-spin" />
+              <ArrowRight v-else class="w-5 h-5" />
             </button>
           </form>
         </div>
