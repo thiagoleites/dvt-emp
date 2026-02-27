@@ -2,7 +2,11 @@ import prisma from '../../utils/prisma'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
-export const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_for_dev_only'
+const secretStr = process.env.JWT_SECRET
+if (!secretStr) {
+    throw new Error('JWT_SECRET environment variable is missing!')
+}
+export const JWT_SECRET = secretStr
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
@@ -26,7 +30,7 @@ export default defineEventHandler(async (event) => {
 
     // Set HTTP Only Cookie
     setCookie(event, 'auth_token', token, {
-        httpOnly: false,
+        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         maxAge: 60 * 60 * 24 * 7, // 7 days

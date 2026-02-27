@@ -4,7 +4,12 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   app: {
-    pageTransition: { name: 'page', mode: 'out-in' }
+    pageTransition: { name: 'page', mode: 'out-in' },
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favico.svg' }
+      ]
+    }
   },
   runtimeConfig: {
     mailersendApiKey: process.env.MAILERSEND_API_KEY,

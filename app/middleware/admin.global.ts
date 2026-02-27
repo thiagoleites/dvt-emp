@@ -1,15 +1,15 @@
-export default defineNuxtRouteMiddleware((to, from) => {
-    const token = useCookie('auth_token')
+export default defineNuxtRouteMiddleware(async (to, from) => {
+    if (to.path.startsWith('/admin')) {
+        // useFetch automatically forwards headers/cookies in SSR, calling the backend for real JWT validation
+        const { data, error } = await useFetch('/api/auth/me')
+        const isAuthenticated = !error.value && data.value
 
-    // If going to an admin route (except login) and no token exists
-    if (to.path.startsWith('/admin') && to.path !== '/admin/login') {
-        if (!token.value) {
+        if (to.path !== '/admin/login' && !isAuthenticated) {
             return navigateTo('/admin/login')
         }
-    }
 
-    // If going to login and already authenticated
-    if (to.path === '/admin/login' && token.value) {
-        return navigateTo('/admin')
+        if (to.path === '/admin/login' && isAuthenticated) {
+            return navigateTo('/admin')
+        }
     }
 })

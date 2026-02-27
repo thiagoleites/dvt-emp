@@ -8,11 +8,11 @@ export default defineEventHandler(async (event) => {
     // GET requests might be public depending on the site, but let's protect all for admin
     // Wait, public site needs to GET projects and settings!
 
-    const isProtectedMutation =
-        (path.startsWith('/api/projects') || path.startsWith('/api/settings')) &&
-        event.method !== 'GET'
+    const isProtected =
+        path.startsWith('/api/projects') ||
+        (path.startsWith('/api/settings') && event.method !== 'GET')
 
-    if (isProtectedMutation) {
+    if (isProtected) {
         const token = getCookie(event, 'auth_token')
 
         if (!token) {
