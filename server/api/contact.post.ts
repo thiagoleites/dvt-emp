@@ -20,6 +20,32 @@ export default defineEventHandler(async (event) => {
         });
     }
 
+    // Validate Proof-of-Work Anti-Spam
+    const { pow_challenge, pow_nonce } = body;
+
+    if (!pow_challenge || pow_nonce === undefined) {
+        throw createError({
+            statusCode: 403,
+            statusMessage: 'Falha na verificação de segurança (Anti-Spam ausente). Recarregue a página.',
+        });
+    }
+
+    // 1. Verify if the challenge is authentic and not expired
+    if (!verifyChallenge(pow_challenge, runtimeConfig.powSecret)) {
+        throw createError({
+            statusCode: 403,
+            statusMessage: 'Desafio de segurança inválido ou expirado. Recarregue a página.',
+        });
+    }
+
+    // 2. Verify if the Proof-of-Work (mined nonce) is correct
+    if (!verifyProofOfWork(pow_challenge, pow_nonce)) {
+        throw createError({
+            statusCode: 403,
+            statusMessage: 'Prova de trabalho criptográfica inválida. Spam bloqueado.',
+        });
+    }
+
     try {
         const mailerSend = new MailerSend({
             apiKey: runtimeConfig.mailersendApiKey,

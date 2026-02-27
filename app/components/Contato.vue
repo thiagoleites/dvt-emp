@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Mail, Phone, MapPin, ArrowRight, Loader2, CheckCircle, AlertCircle } from 'lucide-vue-next'
+import { ref, onMounted } from 'vue'
+import { Mail, Phone, MapPin, ArrowRight, Loader2, CheckCircle, AlertCircle, ShieldCheck } from 'lucide-vue-next'
 
 const form = ref({
   name: '',
@@ -8,9 +8,49 @@ const form = ref({
   message: ''
 })
 
+const challengeData = ref<{ challenge: string, difficulty: number } | null>(null)
 const isLoading = ref(false)
+const isMining = ref(false)
 const status = ref<'idle' | 'success' | 'error'>('idle')
 const errorMessage = ref('')
+
+onMounted(async () => {
+  try {
+    const res = await $fetch('/api/challenge')
+    if (res.success && res.data) {
+      challengeData.value = res.data
+    }
+  } catch (e) {
+    console.error('Falha ao obter desafio de segurança PoW', e)
+  }
+})
+
+async function mineProofOfWork(challenge: string, difficulty: number): Promise<number> {
+  let nonce = 0
+  const encoder = new TextEncoder()
+  const targetPrefix = '0'.repeat(difficulty)
+
+  while (true) {
+    const input = `${challenge}:${nonce}`
+    const hashBuffer = await window.crypto.subtle.digest('SHA-256', encoder.encode(input))
+    const hashArray = Array.from(new Uint8Array(hashBuffer))
+    
+    // Otimização para difficulty 4 (espera bytes 00 00)
+    if (difficulty === 4) {
+      if (hashArray[0] === 0 && hashArray[1] === 0) return nonce
+    } else {
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+      if (hashHex.startsWith(targetPrefix)) return nonce
+    }
+
+    nonce++
+    
+    // Evita travar a thread principal da UI durante a mineração pesada
+    if (nonce % 500 === 0) {
+      await new Promise(resolve => setTimeout(resolve, 0))
+    }
+  }
+}
 
 async function submitForm() {
   if (!form.value.name || !form.value.email || !form.value.message) {
@@ -22,16 +62,43 @@ async function submitForm() {
   isLoading.value = true
   status.value = 'idle'
   
+  if (!challengeData.value) {
+    status.value = 'error'
+    errorMessage.value = 'Desafio de segurança ausente. Por favor, recarregue a página.'
+    isLoading.value = false
+    return
+  }
+
+  isMining.value = true
+  let nonce: number
+  try {
+    nonce = await mineProofOfWork(challengeData.value.challenge, challengeData.value.difficulty)
+  } catch (e) {
+    status.value = 'error'
+    errorMessage.value = 'Falha ao processar segurança anti-spam.'
+    isLoading.value = false
+    isMining.value = false
+    return
+  }
+  isMining.value = false
+  
   try {
     await $fetch('/api/contact', {
       method: 'POST',
-      body: form.value
+      body: {
+        ...form.value,
+        pow_challenge: challengeData.value.challenge,
+        pow_nonce: nonce
+      }
     })
     
     status.value = 'success'
     form.value = { name: '', email: '', message: '' }
     
-    // Reset success message after 5 seconds
+    // Buscar um novo desafio após envio bem sucedido
+    const res = await $fetch('/api/challenge')
+    if (res.success && res.data) challengeData.value = res.data
+    
     setTimeout(() => {
       if (status.value === 'success') status.value = 'idle'
     }, 5000)
@@ -39,6 +106,12 @@ async function submitForm() {
   } catch (error: any) {
     status.value = 'error'
     errorMessage.value = error.data?.statusMessage || 'Ocorreu um erro ao enviar sua mensagem. Tente novamente mais tarde.'
+    
+    // Renovar desafio caso o erro tenha sido falha no PoW ou expirado
+    if (error.response?.status === 403) {
+      const res = await $fetch('/api/challenge')
+      if (res.success && res.data) challengeData.value = res.data
+    }
   } finally {
     isLoading.value = false
   }
@@ -143,10 +216,18 @@ async function submitForm() {
               :disabled="isLoading"
               class="w-full py-4 mt-2 bg-slate-900 text-white font-semibold rounded-xl hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors flex justify-center items-center gap-2"
             >
-              <span v-if="!isLoading">Enviar mensagem</span>
-              <span v-else>Enviando...</span>
-              <Loader2 v-if="isLoading" class="w-5 h-5 animate-spin" />
-              <ArrowRight v-else class="w-5 h-5" />
+              <template v-if="!isLoading">
+                <span>Enviar mensagem</span>
+                <ArrowRight class="w-5 h-5" />
+              </template>
+              <template v-else-if="isMining">
+                <ShieldCheck class="w-5 h-5 animate-pulse text-indigo-400" />
+                <span>Validando segurança...</span>
+              </template>
+              <template v-else>
+                <Loader2 class="w-5 h-5 animate-spin" />
+                <span>Enviando...</span>
+              </template>
             </button>
           </form>
         </div>

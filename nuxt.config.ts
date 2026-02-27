@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     mailersendApiKey: process.env.MAILERSEND_API_KEY,
     mailersendFromEmail: process.env.MAILERSEND_FROM_EMAIL,
     mailersendToEmail: process.env.MAILERSEND_TO_EMAIL,
+    powSecret: process.env.POW_SECRET,
   },
   devServer: {
     port: 3001
