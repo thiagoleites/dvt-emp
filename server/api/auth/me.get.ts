@@ -1,15 +1,15 @@
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from './login.post';
 
 export default defineEventHandler((event) => {
     const token = getCookie(event, 'auth_token');
+    const runtimeConfig = useRuntimeConfig();
 
     if (!token) {
         throw createError({ statusCode: 401, statusMessage: 'Não autenticado.' });
     }
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string, email: string };
+        const decoded = jwt.verify(token, runtimeConfig.jwtSecret as string) as { userId: string, email: string };
         return {
             success: true,
             user: {

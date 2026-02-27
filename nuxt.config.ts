@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     }
   },
   runtimeConfig: {
+    jwtSecret: process.env.JWT_SECRET,
     mailersendApiKey: process.env.MAILERSEND_API_KEY,
     mailersendFromEmail: process.env.MAILERSEND_FROM_EMAIL,
     mailersendToEmail: process.env.MAILERSEND_TO_EMAIL,

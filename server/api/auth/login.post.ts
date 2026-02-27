@@ -2,13 +2,14 @@ import prisma from '../../utils/prisma'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
-const secretStr = process.env.JWT_SECRET
-if (!secretStr) {
-    throw new Error('JWT_SECRET environment variable is missing!')
-}
-export const JWT_SECRET = secretStr
-
 export default defineEventHandler(async (event) => {
+    const runtimeConfig = useRuntimeConfig()
+    const JWT_SECRET = runtimeConfig.jwtSecret as string
+
+    if (!JWT_SECRET) {
+        throw createError({ statusCode: 500, statusMessage: 'JWT_SECRET is missing on the server.' })
+    }
+
     const body = await readBody(event)
 
     if (!body?.email || !body?.password) {
