@@ -79,6 +79,50 @@ export default defineEventHandler(async (event) => {
 
         await mailerSend.email.send(emailParams);
 
+        const clientRecipients = [
+            new Recipient(body.email, body.name)
+        ];
+
+        const clientAutoReplyParams = new EmailParams()
+            .setFrom(new Sender(runtimeConfig.mailersendFromEmail, "Devt Digital"))
+            .setTo(clientRecipients)
+            .setSubject(`Recebemos seu contato, ${body.name} - Devt Digital`)
+            .setHtml(`
+              <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #eaeaea; border-radius: 8px; overflow: hidden;">
+                <div style="background-color: #0f172a; padding: 24px; text-align: center;">
+                  <h1 style="color: #fff; margin: 0; font-size: 24px;">Devt Digital</h1>
+                </div>
+                <div style="padding: 32px 24px;">
+                  <p style="font-size: 16px; margin-bottom: 16px;">Olá <strong>${body.name}</strong>,</p>
+                  <p style="font-size: 16px; margin-bottom: 16px; line-height: 1.5;">Obrigado por entrar em contato conosco! Recebemos sua mensagem e nossa equipe retornará o mais breve possível.</p>
+                  <div style="background-color: #f8fafc; border-left: 4px solid #0f172a; padding: 16px; margin-bottom: 24px; border-radius: 0 4px 4px 0;">
+                    <p style="font-size: 14px; margin: 0; color: #475569;"><strong>Sua mensagem:</strong></p>
+                    <p style="font-size: 14px; margin: 8px 0 0 0; color: #334155; font-style: italic;">${body.message.replace(/\n/g, '<br />')}</p>
+                  </div>
+                  <p style="font-size: 16px; margin-bottom: 24px; line-height: 1.5;">Se o seu assunto for urgente, você também pode nos contatar através do nosso WhatsApp: <strong><a href="https://wa.me/5582996706451" style="color: #2563eb; text-decoration: none;">+55 (82) 99670-6451</a></strong>.</p>
+                  <p style="font-size: 16px; margin: 0;">Atenciosamente,<br><strong>Equipe Devt Digital</strong></p>
+                </div>
+                <div style="background-color: #f8fafc; padding: 16px; text-align: center; border-top: 1px solid #eaeaea;">
+                  <p style="font-size: 12px; color: #64748b; margin: 0;">Você está recebendo este email porque entrou em contato através do site devt.com.br.</p>
+                </div>
+              </div>
+            `)
+            .setText(`
+Olá ${body.name},
+
+Obrigado por entrar em contato conosco! Recebemos sua mensagem e nossa equipe retornará o mais breve possível.
+
+Sua mensagem:
+${body.message}
+
+Se o seu assunto for urgente, você também pode nos contatar através do nosso WhatsApp: +55 (82) 99670-6451.
+
+Atenciosamente,
+Equipe Devt Digital
+            `);
+
+        await mailerSend.email.send(clientAutoReplyParams);
+
         return {
             success: true,
             message: 'Email sent successfully!'
