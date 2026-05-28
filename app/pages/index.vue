@@ -1,8 +1,8 @@
 <script setup lang="ts">
 useHead({
-  title: 'Devt Digital - Automação de Publicações e Integrações SaaS',
+  title: 'Devt Digital - Soluções SaaS para Instagram, MotoERP e Restaurantes',
   meta: [
-    { name: 'description', content: 'Devt Digital oferece soluções SaaS para automação de publicações e integrações com APIs oficiais de redes sociais.' }
+    { name: 'description', content: 'Devt Digital oferece soluções SaaS para automação de Instagram Stories, gestão de motopeças/autopeças e operações de restaurantes e pizzarias com painel de cozinha em tempo real.' }
   ]
 })
 </script>

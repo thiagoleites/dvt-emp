@@ -24,10 +24,10 @@ const { data: settings } = await useFetch<Record<string, string>>('/api/settings
       </div>
       
       <div class="mt-12 pt-8 border-t border-slate-900 text-center md:text-left text-sm flex flex-col md:flex-row justify-between items-center gap-4">
-        <p v-if="settings?.footer_text">{{ settings.footer_text }}</p>
-        <p v-else>&copy; {{ currentYear }} Devt Digital. Todos os direitos reservados.</p>
+        <p v-if="settings?.footer_text" class="text-white">{{ settings.footer_text }}</p>
+        <p v-else class="text-white">&copy; {{ currentYear }} Devt Digital. Todos os direitos reservados.</p>
         
-        <p class="text-slate-500">Tecnologia para automação e crescimento digital.</p>
+        <p class="text-white">Tecnologia para automação e crescimento digital.</p>
       </div>
     </div>
   </footer>

@@ -1,6 +1,24 @@
 <script setup lang="ts">
 import { Image as ImageIcon, Layers, Settings, Zap, Clock, ShieldCheck } from 'lucide-vue-next'
 
+const offerings = [
+  {
+    icon: ImageIcon,
+    title: "Instagram Stories",
+    description: "Automação de publicações, layouts e campanhas para marcas que querem manter presença diária no Instagram."
+  },
+  {
+    icon: Layers,
+    title: "MotoERP para motopeças",
+    description: "Gestão completa de estoque, vendas, fluxo de caixa e controle financeiro para lojas de motopeças e autopeças."
+  },
+  {
+    icon: Settings,
+    title: "Restaurantes e pizzarias",
+    description: "Painel de cozinha em tempo real, pedidos de mesa e preparação via websocket para operações mais rápidas e confiáveis."
+  }
+]
+
 const features = [
   {
     icon: ImageIcon,
@@ -34,9 +52,26 @@ const features = [
   <section id="plataforma" class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight">Plataforma de automação para Instagram Stories</h2>
+        <h2 class="text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight">Soluções SaaS para Instagram, motopeças e restaurantes</h2>
         <p class="mt-6 text-lg text-slate-600 leading-relaxed">
-          A Devt Digital está desenvolvendo uma plataforma SaaS para automação de publicações no Instagram Stories, voltada para empresas que desejam organizar e otimizar a divulgação de seus produtos.
+          A Devt Digital desenvolve plataformas SaaS para automação de marketing digital, gestão comercial e operações de cozinha em tempo real, com foco em resultados para empresas e empreendedores.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        <div v-for="(offering, index) in offerings" :key="index" class="p-8 rounded-3xl border border-slate-200 bg-slate-50 hover:bg-white hover:shadow-lg transition-all duration-300 group">
+          <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-6 border border-slate-200 shadow-sm group-hover:scale-110 transition-transform duration-300">
+            <component :is="offering.icon" class="w-6 h-6 text-slate-900" />
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-3">{{ offering.title }}</h3>
+          <p class="text-slate-600 leading-relaxed">{{ offering.description }}</p>
+        </div>
+      </div>
+
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <h3 class="text-2xl font-bold text-slate-900 mb-4">O que já estamos construindo</h3>
+        <p class="text-slate-600 text-lg leading-relaxed">
+          Nossa primeira solução está voltada para automação de publicações no Instagram Stories, mas estamos ampliando o portfólio com sistemas de gestão e operações em tempo real para novos segmentos.
         </p>
       </div>
 
@@ -58,7 +93,7 @@ const features = [
           </div>
           <h3 class="text-2xl font-bold text-white mb-4">Uso atual</h3>
           <p class="text-slate-300 text-lg max-w-3xl mx-auto leading-relaxed">
-            Em fase de validação interna com a marca <strong class="text-white font-semibold">Toda Diva – Moda Feminina</strong> (do mesmo grupo empresarial), utilizando apenas dados e conta comercial autorizada.
+            Em fase de validação interna com a marca <strong class="text-white font-semibold">Toda Diva – Moda Feminina</strong> (do mesmo grupo empresarial), utilizando apenas dados e conta comercial autorizada. Ao mesmo tempo, já estamos desenvolvendo também MotoERP para peças e sistemas para restaurantes/pizzarias.
           </p>
         </div>
       </div>

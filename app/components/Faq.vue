@@ -20,6 +20,10 @@ const faqs = [
     answer: "Utilizamos apenas os dados fornecidos no cadastro dos produtos (imagens, nomes, preços e descrições) e as permissões básicas necessárias para realizar a publicação na sua conta comercial."
   },
   {
+    question: "Vocês desenvolvem outras soluções além do Instagram?",
+    answer: "Sim. A Devt Digital desenvolve também sistemas de gestão para motopeças e autopeças e plataformas para restaurantes e pizzarias, incluindo painel de cozinha e pedidos em tempo real via websocket."
+  },
+  {
     question: "Quando será aberto ao público?",
     answer: "Atualmente a plataforma encontra-se em fase de validação interna. Em breve anunciaremos a disponibilidade para novos clientes e parceiros."
   }

@@ -6,6 +6,9 @@ export default defineNuxtConfig({
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
     head: {
+      htmlAttrs: {
+        lang: 'pt-BR'
+      },
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favico.svg' }
       ]
