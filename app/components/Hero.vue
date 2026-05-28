@@ -17,7 +17,7 @@ const { data: settings } = await useFetch<Record<string, string>>('/api/settings
           :transition="{ duration: 500 }"
         >
           <template v-if="settings?.home_title">{{ settings.home_title }}</template>
-          <template v-else>Tecnologia para automação e <span style="text-color: #2c3c54;">crescimento digital.</span></template>
+          <template v-else>Tecnologia para automação e <span class="text-[2c3c54]">crescimento digital.</span></template>
         </h1>
         <p 
           class="mt-8 text-lg sm:text-xl lg:text-2xl text-slate-600 leading-relaxed max-w-3xl font-medium"
