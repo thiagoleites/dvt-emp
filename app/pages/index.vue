@@ -12,11 +12,11 @@ useHead({
     <Header />
     <main>
       <Hero />
-      <Sobre />
-      <Plataforma />
-      <Seguranca />
-      <Faq />
-      <Contato />
+      <LazySobre />
+      <LazyPlataforma />
+      <LazySeguranca />
+      <LazyFaq />
+      <LazyContato />
     </main>
     <Footer />
   </div>

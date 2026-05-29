@@ -76,7 +76,7 @@ const loading = ref(false)
 const saved = ref(false)
 
 // Carregar configurações atuais
-const { data: settings } = await useFetch('/api/settings')
+const { data: settings } = await useFetch<Record<string, string>>('/api/settings', { key: 'site-settings' })
 if (settings.value) {
   if (settings.value.home_title) form.home_title = settings.value.home_title
   if (settings.value.home_description) form.home_description = settings.value.home_description
@@ -91,6 +91,7 @@ async function saveSettings() {
       method: 'PUT',
       body: form
     })
+    await refreshNuxtData('site-settings')
     saved.value = true
     setTimeout(() => { saved.value = false }, 3000)
   } catch (err) {

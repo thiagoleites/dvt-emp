@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { Layers } from 'lucide-vue-next'
 
 const currentYear = ref(new Date().getFullYear())
-const { data: settings } = await useFetch<Record<string, string>>('/api/settings')
+const { data: settings } = await useFetch<Record<string, string>>('/api/settings', { key: 'site-settings' })
 </script>
 
 <template>

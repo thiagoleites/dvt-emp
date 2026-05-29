@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ArrowRight } from 'lucide-vue-next'
 
-const { data: settings } = await useFetch<Record<string, string>>('/api/settings')
+const { data: settings } = await useFetch<Record<string, string>>('/api/settings', { key: 'site-settings' })
 </script>
 
 <template>
